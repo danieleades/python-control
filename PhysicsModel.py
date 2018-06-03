@@ -1,5 +1,6 @@
 
 from scipy.integrate import solve_ivp
+import numpy as np
 
 class PhysicsModel_1D:
 
@@ -7,12 +8,14 @@ class PhysicsModel_1D:
         self.mass = 1
         self.position = 0
         self.velocity = 0   
+        self.drag_coefficient = 0.1
 
     def _dx_dt(self,X,force):
         #jacobian
         x1, x2 = X
+        drag =  - self.drag_coefficient * x2**2 * np.sign(x2)
         x1dot = x2
-        x2dot = force/self.mass
+        x2dot = (force+drag)/self.mass
         return [x1dot, x2dot]
 
     def push(self,force,timestep):
