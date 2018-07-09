@@ -8,7 +8,7 @@ class PhysicsModel_1D:
         self.mass = 1
         self.position = 0
         self.velocity = 0   
-        self.drag_coefficient = 0.1
+        self.drag_coefficient = 1
 
     def _dx_dt(self,X,force):
         #jacobian
@@ -20,8 +20,6 @@ class PhysicsModel_1D:
 
     def push(self,force,timestep):
         X0 = [self.position,self.velocity]
-        args=[]
-        args.append(force)
         fun=lambda t, y: self._dx_dt(y,force)
 
         #this uses an adaptive timestep to return an accurate numerical solution

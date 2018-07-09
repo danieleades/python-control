@@ -2,8 +2,8 @@ from IntegralWindow import IntegralWindow
 
 class PidLoop:
     def __init__(self):
-        self.Kp = 1
-        self.Ki = 0.1
+        self.Kp = 2
+        self.Ki = 0
         self.Kd = 0
         self.timestep = 0
         self.error = 0

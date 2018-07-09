@@ -16,7 +16,8 @@ class VehicleModel:
         self.time_interval = time_interval
 
     def add_noise(self):
-        self.force_request += np.random.normal(scale = 1)
+        ##self.force_request += np.random.normal(scale = 1)
+        pass
 
     def add_current(self):
         self.force_request += 1
