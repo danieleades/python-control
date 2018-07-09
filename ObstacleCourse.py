@@ -2,4 +2,11 @@
 
 class ObstacleCourse:
     def get_setpoint(self,time):
-        return 10
+        if time < 5:
+            return 0
+        elif time < 25:
+            return 10
+        elif time < 50:
+            return -10
+        else:
+            return 0
