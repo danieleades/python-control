@@ -2,9 +2,9 @@ from IntegralWindow import IntegralWindow
 
 class PidLoop:
     def __init__(self):
-        self.Kp = 2
-        self.Ki = 0
-        self.Kd = 0
+        self.Kp = 7.18921353
+        self.Ki = 9.83735663
+        self.Kd = 0.67080847
         self.timestep = 0
         self.error = 0
         self.last_error = 0
