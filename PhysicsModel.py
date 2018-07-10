@@ -8,10 +8,11 @@ class PhysicsModel_1D:
         self.mass = 1
         self.position = 0
         self.velocity = 0   
-        self.drag_coefficient = 1
+        self.drag_coefficient = 0.1
 
+    # jacobian
     def _dx_dt(self,X,force):
-        #jacobian
+        
         x1, x2 = X
         drag =  - self.drag_coefficient * x2**2 * np.sign(x2)
         x1dot = x2
