@@ -1,4 +1,5 @@
 from IntegralWindow import IntegralWindow
+import numpy as np
 
 class PidLoop:
     def __init__(self):
@@ -25,3 +26,16 @@ class PidLoop:
         derivative = self.Kd*(self.error - self.last_error)/self.timestep
         self.output = proportional + integral + derivative
         return self.output
+
+    def get_control_parameters(self):
+        parameters=[]
+        parameters.append(self.Kp)
+        parameters.append(self.Ki)
+        parameters.append(self.Kd)
+        return parameters
+    
+    def set_control_parameters(self,parameters):
+        self.Kp,self.Ki,self.Kd = parameters
+
+    def get_control_parameter_bounds(self):
+        return [(0,np.inf),(0,np.inf),(0,np.inf)]

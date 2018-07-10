@@ -26,3 +26,12 @@ class VehicleController:
 
     def get_velocity(self):
         return self.vehicle_model.get_velocity()
+
+    def get_control_parameters(self):
+        return self.controller.get_control_parameters()
+
+    def set_control_parameters(self,parameters):
+        self.controller.set_control_parameters(parameters)
+
+    def get_control_parameter_bounds(self):
+        return self.controller.get_control_parameter_bounds()
