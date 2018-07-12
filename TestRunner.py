@@ -45,7 +45,7 @@ class TestRunner:
 
 
         
-        result = minimizeCompass(self._objective_function, x0=initial_parameters, bounds=bounds, callback=self._print_progress)
+        result = minimizeCompass(self._objective_function, x0=initial_parameters, bounds=bounds, callback=self._print_progress, deltainit=100)
         
         if result.success:
             print("optimisation terminated successfully\n")
