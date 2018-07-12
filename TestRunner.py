@@ -4,6 +4,7 @@ import numpy as np
 from scipy.optimize import minimize
 from ObstacleCourse import ObstacleCourse
 from CostFunction import simple_cost_function
+from noisyopt import minimizeCompass, minimizeSPSA
 
 class Results:
     def __init__(self):
@@ -21,12 +22,15 @@ class TestRunner:
         self.cost_function = cost_function
         self.results = Results()
 
-    def _objective_function(self,parameters):
+    def _objective_function(self,parameters,seed=None):
         test_runner=TestRunner()
         test_runner.set_control_parameters(parameters)
         test_runner.run()
         score = test_runner.get_score()
         return score
+
+    def _print_progress(self,parameters):
+        print("current parameters: {}".format(parameters))
 
     def optimise(self,update_on_failure=True,maxiter=1000):
         self.run()
@@ -38,9 +42,10 @@ class TestRunner:
         options={}
         options['maxiter']=maxiter
         print("optimising control parameters. This will take a while, unless it takes longer.\n")
+
+
         
-        result = minimize(self._objective_function,initial_parameters, method='COBYLA', constraints=constraints, options=options) # this method is slow, and produces a worse result, but it works every time
-        #result = minimize(self._objective_function,initial_parameters, method='SLSQP', bounds=bounds) # this method seems to work sporadically. when it does work, it's faster and more optimal
+        result = minimizeCompass(self._objective_function, x0=initial_parameters, bounds=bounds, callback=self._print_progress)
         
         if result.success:
             print("optimisation terminated successfully\n")
@@ -56,15 +61,11 @@ class TestRunner:
         self.run()
         optimal_score = self.get_score()
 
-        if verbose:
-            print(result)
-
         print()
         print("initial parameters:\n\tcontrol parameters: {}\n\tscore: {}\n".format(initial_parameters, intial_score))
         print("optimal parameters:\n\tcontrol parameters: {}\n\tscore: {}\n".format(optimal_parameters, optimal_score))
 
         return result
-
 
     def reset(self):
         self.results.positions.clear()
