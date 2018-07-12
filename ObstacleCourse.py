@@ -5,7 +5,7 @@ class ObstacleCourse:
         if time < 5:
             return 0
         elif time < 25:
-            return 10
+            return 1
         elif time < 50:
             return -10
         else:

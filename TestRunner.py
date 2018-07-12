@@ -64,3 +64,12 @@ class TestRunner:
         
     def get_score(self):
         return self.cost_function(self.results)
+
+    def get_control_parameters(self):
+        return self.vehicle_controller.get_control_parameters()
+
+    def get_control_parameter_bounds(self):
+        return self.vehicle_controller.get_control_parameter_bounds()
+
+    def set_control_parameters(self,parameters):
+        self.vehicle_controller.set_control_parameters(parameters)
