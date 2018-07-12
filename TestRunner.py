@@ -28,32 +28,42 @@ class TestRunner:
         score = test_runner.get_score()
         return score
 
-    def optimise(self):
+    def optimise(self,update_on_failure=True,maxiter=1000):
         self.run()
         intial_score = self.get_score()
 
         initial_parameters = self.get_control_parameters()
         bounds = self.vehicle_controller.get_control_parameter_bounds()
         constraints = {'type':'ineq', 'fun': lambda x: x}
-
+        options={}
+        options['maxiter']=maxiter
         print("optimising control parameters. This will take a while, unless it takes longer.\n")
         
-        result = minimize(self._objective_function,initial_parameters, method='COBYLA', constraints=constraints) # this method is slow, and produces a worse result, but it works every time
+        result = minimize(self._objective_function,initial_parameters, method='COBYLA', constraints=constraints, options=options) # this method is slow, and produces a worse result, but it works every time
         #result = minimize(self._objective_function,initial_parameters, method='SLSQP', bounds=bounds) # this method seems to work sporadically. when it does work, it's faster and more optimal
         
         if result.success:
             print("optimisation terminated successfully\n")
         else:
             print("optimisation failed: {}\n".format(result.message))
-            return
+            if update_on_failure:
+                print("using last value") 
+            else:
+                return
 
         optimal_parameters = result.x
         self.set_control_parameters(optimal_parameters)
         self.run()
         optimal_score = self.get_score()
 
+        if verbose:
+            print(result)
+
+        print()
         print("initial parameters:\n\tcontrol parameters: {}\n\tscore: {}\n".format(initial_parameters, intial_score))
         print("optimal parameters:\n\tcontrol parameters: {}\n\tscore: {}\n".format(optimal_parameters, optimal_score))
+
+        return result
 
 
     def reset(self):

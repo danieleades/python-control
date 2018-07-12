@@ -1,10 +1,11 @@
 from VehicleModel import VehicleModel
-from PidLoop import PidLoop
+from PidLoop import PidLoop, CascadePidLoop
 
 class VehicleController:
     def __init__(self):
         self.vehicle_model = VehicleModel()
-        self.controller = PidLoop()
+        #self.controller = PidLoop()
+        self.controller = CascadePidLoop()
         self.error = 0
 
     def set_setpoint(self,setpoint):
@@ -16,8 +17,9 @@ class VehicleController:
 
     def run_step(self):
         self.error = self.setpoint - self.vehicle_model.get_position()
-        self.controller.set_error(self.error)
-        force_request = self.controller.run_loop()
+        self.controller.set_position_error(self.error)
+        self.controller.set_velocity(self.vehicle_model.get_velocity())
+        force_request = self.controller.run_step()
         self.vehicle_model.set_force_request(force_request)
         self.vehicle_model.run_step()
 
@@ -35,3 +37,6 @@ class VehicleController:
 
     def get_control_parameter_bounds(self):
         return self.controller.get_control_parameter_bounds()
+
+    def get_control_type(self):
+        return self.controller.control_type
