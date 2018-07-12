@@ -3,9 +3,9 @@ import numpy as np
 
 class PidLoop:
     def __init__(self):
-        self.Kp = 1
-        self.Ki = 1
-        self.Kd = 1
+        self.Kp = 1.9
+        self.Ki = 0.2
+        self.Kd = 7
         self.timestep = 0
         self.error = 0
         self.last_error = 0
