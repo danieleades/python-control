@@ -49,7 +49,7 @@ class PidLoop:
         self.pos_Kp,self.pos_Ki,self.pos_Kd = parameters
 
     def get_control_parameter_bounds(self):
-        return [(0,np.inf),(0,np.inf),(0,np.inf)]
+        return [(0.0,100.0),(0.0,100.0),(0.0,100.0)]
 
 class CascadePidLoop(PidLoop):
     control_type = "cascade PID loop"
@@ -83,4 +83,4 @@ class CascadePidLoop(PidLoop):
         self.pos_Kp,self.pos_Ki,self.pos_Kd, self.vel_Kp, self.vel_Ki, self.vel_Kd = parameters
 
     def get_control_parameter_bounds(self):
-        return [(0,np.inf),(0,np.inf),(0,np.inf),(0,np.inf),(0,np.inf),(0,np.inf)]
+        return [(0.0,100.0),(0.0,100.0),(0.0,100.0),(0.0,100.0),(0.0,100.0),(0.0,100.0)]

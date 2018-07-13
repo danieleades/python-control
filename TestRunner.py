@@ -5,6 +5,7 @@ from scipy.optimize import minimize
 from ObstacleCourse import ObstacleCourse
 from CostFunction import simple_cost_function
 from noisyopt import minimizeCompass, minimizeSPSA
+from skopt import gp_minimize
 
 class Results:
     def __init__(self):
@@ -32,30 +33,17 @@ class TestRunner:
     def _print_progress(self,parameters):
         print("current parameters: {}".format(parameters))
 
-    def optimise(self,update_on_failure=True,maxiter=1000):
+    def optimise(self,verbose=False):
         self.run()
         intial_score = self.get_score()
 
         initial_parameters = self.get_control_parameters()
         bounds = self.vehicle_controller.get_control_parameter_bounds()
-        constraints = {'type':'ineq', 'fun': lambda x: x}
         options={}
-        options['maxiter']=maxiter
         print("optimising control parameters. This will take a while, unless it takes longer.\n")
 
-
+        result = gp_minimize(self._objective_function,bounds,n_calls=100,n_random_starts=10,verbose=verbose)
         
-        result = minimizeCompass(self._objective_function, x0=initial_parameters, bounds=bounds, callback=self._print_progress, deltainit=100)
-        
-        if result.success:
-            print("optimisation terminated successfully\n")
-        else:
-            print("optimisation failed: {}\n".format(result.message))
-            if update_on_failure:
-                print("using last value") 
-            else:
-                return
-
         optimal_parameters = result.x
         self.set_control_parameters(optimal_parameters)
         self.run()
@@ -117,3 +105,6 @@ class TestRunner:
 
     def set_control_parameters(self,parameters):
         self.vehicle_controller.set_control_parameters(parameters)
+
+    def get_control_type(self):
+        return self.vehicle_controller.get_control_type()
