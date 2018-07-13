@@ -1,5 +1,6 @@
 import json
 from TestRunner import TestRunner
+from MyDict import MyDict # extends dict with recursive value setting and getting
 
 class HighScores:
     def __init__(self):
@@ -18,29 +19,35 @@ class HighScores:
         
         print("high scores loaded")
 
-    def insert(self,test_runner,result,score):
-        obstacle_course = test_runner.pilot.name
-        duration = test_runner.max_time
-        timestep = test_runner.timestep
-        controller = test_runner.get_control_type()
+    def insert(self,hash,parameters_in,score):
 
-        new_score = score
-        parameters = result.x
-        print("new score: {}".format(new_score))
+        hash_string = hash.hexdigest()
+        parameters = parameters_in.tolist()
+
+        print("new score: {}".format(score))
 
         try:
-            old_score = self.high_scores[obstacle_course][duration][timestep][controller]['score']
+            old_score = self.high_scores[hash_string]['score']
+        except:
+            old_score=None
+
+        if old_score:
             print("old score: {}".format(old_score))
-        except: # old score doesn't exist
-            self.high_scores[obstacle_course][duration][timestep][controller]['score']=new_score
-            self.high_scores[obstacle_course][duration][timestep][controller]['parameters']=parameters
-        else:            
-            if new_score < old_score:
-                print("new score is better than the old score")
-                self.high_scores[obstacle_course][duration][timestep][controller]['score']=new_score
-                self.high_scores[obstacle_course][duration][timestep][controller]['parameters']=parameters
-            else:
-                print("old score is better than the new score")
+        else:
+            new_data = {}
+            new_data['score'] = score
+            new_data['parameters'] = parameters
+            self.high_scores[hash_string] = new_data
+            return
+        
+        if score < old_score:
+            print("new score is better than the old score")
+            new_data = {}
+            new_data['score'] = score
+            new_data['parameters'] = parameters
+            self.high_scores[hash_string] = new_data
+        else:
+            print("old score is better than the new score")
             
     def save(self):
         with open(self.filepath,'w') as file:

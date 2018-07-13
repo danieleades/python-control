@@ -6,6 +6,7 @@ from ObstacleCourse import ObstacleCourse
 from CostFunction import simple_cost_function
 from noisyopt import minimizeCompass, minimizeSPSA
 from skopt import gp_minimize
+import hashlib
 
 class Results:
     def __init__(self):
@@ -42,7 +43,7 @@ class TestRunner:
         options={}
         print("optimising control parameters. This will take a while, unless it takes longer.\n")
 
-        result = gp_minimize(self._objective_function,bounds,n_calls=100,n_random_starts=10,verbose=verbose)
+        result = gp_minimize(self._objective_function,bounds,n_calls=20,n_random_starts=2,verbose=verbose)
         
         optimal_parameters = result.x
         self.set_control_parameters(optimal_parameters)
@@ -108,3 +109,13 @@ class TestRunner:
 
     def get_control_type(self):
         return self.vehicle_controller.get_control_type()
+
+    def get_test_hash(self):
+        obstacle_course = self.pilot.name
+        duration = str(self.max_time)
+        timestep = str(self.timestep)
+        controller = self.get_control_type()
+
+        signature = obstacle_course + duration + timestep + controller
+
+        return hashlib.sha1(signature.encode())
