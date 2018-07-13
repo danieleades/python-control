@@ -1,6 +1,5 @@
 import json
 from TestRunner import TestRunner
-from MyDict import MyDict # extends dict with recursive value setting and getting
 
 class HighScores:
     def __init__(self):

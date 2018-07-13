@@ -7,6 +7,7 @@ from CostFunction import simple_cost_function
 from noisyopt import minimizeCompass, minimizeSPSA
 from skopt import gp_minimize
 import hashlib
+import copy
 
 class Results:
     def __init__(self):
@@ -25,7 +26,7 @@ class TestRunner:
         self.results = Results()
 
     def _objective_function(self,parameters,seed=None):
-        test_runner=TestRunner()
+        test_runner=copy.deepcopy(self)
         test_runner.set_control_parameters(parameters)
         test_runner.run()
         score = test_runner.get_score()
@@ -40,10 +41,10 @@ class TestRunner:
 
         initial_parameters = self.get_control_parameters()
         bounds = self.vehicle_controller.get_control_parameter_bounds()
-        options={}
+
         print("optimising control parameters. This will take a while, unless it takes longer.\n")
 
-        result = gp_minimize(self._objective_function,bounds,n_calls=20,n_random_starts=2,verbose=verbose)
+        result = gp_minimize(self._objective_function,bounds,n_calls=100,n_random_starts=10,verbose=verbose)
         
         optimal_parameters = result.x
         self.set_control_parameters(optimal_parameters)
